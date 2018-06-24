@@ -36,7 +36,6 @@ def write_properties_to_file(filename="properties.csv", properties = properties)
         writer.writeheader() # uses fieldnames set above
         for p  in properties:
             writer.writerow(p)
-
 #Enter address for url input.
 street_address = input("Please Enter a Street Address (No Abbreviations): ").title()
 while True:
@@ -138,15 +137,15 @@ while True:
 principal = purchase_price*(1-down)
 interest = rate
 
+
 #found on https://code.sololearn.com/c5kHd8o29UHG/#py
 def monthly_loan(principal,interest_rate,duration):
     n = duration*12 #total number of months
     r = interest_rate/(100*12) #interest per month
     monthly_payment = principal*((r*((r+1)**n))/(((r+1)**n)-1)) #formula for compound interest applied on mothly payments.
     return monthly_payment
-payment = monthly_loan(principal,interest,term) 
+payment = monthly_loan(principal,interest,term)
 
-#Enter, validate, and sum expense inputs.
 taxes = input("Please enter estimated annual real estate taxes: ")
 while True:
     try:
@@ -218,7 +217,6 @@ while True:
 expenses = [utilities,taxes,management_fees,hoa]
 
 total_expenses = sum(expenses)
-        
 load_dotenv()
 api_key = os.environ.get("MY_API_KEY") or "OOPS. Please set an environment variable named 'MY_API_KEY'."
 f = { 'address' : address, 'bathrooms' : bathrooms,'bedrooms':bedrooms}
@@ -232,6 +230,40 @@ headers = {
 
 response = requests.get(url, headers=headers)
 all_data = json.loads(response.text)
-print(response)
-print(all_data)
+#print(response)
+#print(all_data)
 rent_estimate = all_data['rent']
+
+passthrough_tax_rate = 0.20
+
+monthly_net_income = (rent_estimate - payment - total_expenses)*(1-passthrough_tax_rate)
+first_year_cash_on_cash = (monthly_net_income*12)/(purchase_price*down)
+
+#Formatting variables for printing and writing to csv file.
+first_year_percent = "{0:.2f}%".format(first_year_cash_on_cash*100)
+purchase_price = "${0:,.2f}".format(purchase_price)
+monthly_net_income = "${0:,.2f}".format(monthly_net_income)
+interest = "{0:.2f}%".format(interest*100)
+down = "{0:.2f}%".format(down*100)
+rent_estimate = "${0:,.2f}".format(rent_estimate)
+total_expenses = "${0:,.2f}".format(total_expenses)
+
+#Printing outputs.
+if first_year_cash_on_cash >= .08:
+    print("You found a great property, earning "+first_year_percent+" in the first year!")
+    print("Address: "+address)
+    print("Purchase Price: "+purchase_price)
+    print("Monthly Rental Revenue: "+rent_estimate)
+    print("Monthly Net Income: "+monthly_net_income)
+else:
+    print("The property you input might not be the best. It only earns "+first_year_percent+" in the first year.")
+    print("Keep Looking!")
+    print("Address: "+address)
+    print("Purchase Price: "+purchase_price)
+    print("Monthly Rental Revenue: "+rent_estimate)
+    print("Monthly Net Income: "+monthly_net_income)
+
+new_property ={"street_address":street_address,"city":city,"state":state,"purchase_price":purchase_price,"down":down,"interest":interest,"rent_estimate":rent_estimate,"total_expenses":total_expenses,"monthly_net_income":monthly_net_income,"first_year_cash_on_cash":first_year_percent}
+properties = properties.append(new_property)
+
+write_properties_to_file()
