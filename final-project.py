@@ -112,7 +112,80 @@ def monthly_loan(principal,interest_rate,duration):
     r = interest_rate/(100*12) #interest per month
     monthly_payment = principal*((r*((r+1)**n))/(((r+1)**n)-1)) #formula for compound interest applied on mothly payments.
     return monthly_payment
-payment = monthly_loan(principal,interest,term)        
+payment = monthly_loan(principal,interest,term) 
+
+#Enter, validate, and sum expense inputs.
+taxes = input("Please enter estimated annual real estate taxes: ")
+while True:
+    try:
+        if "." in taxes:
+            if len(taxes.split(".", 1)[1]) <= 2:
+                taxes = float(taxes)/12
+                break
+            else:
+                taxes = input("Please enter a VALID annual real estate tax estimate (max 2 numbers after decimal): ")
+        elif type(int(taxes)) == int:
+            taxes = float(taxes)/12
+            break
+        else:
+            taxes = input("Please enter a VALID annual real estate tax estimate (max 2 numbers after decimal): ")
+    except ValueError:
+        taxes = input("Please enter a VALID annual real estate tax estimate (max 2 numbers after decimal): ")
+
+utilities = input("Please enter estimated monthly utility expense: ")
+while True:
+    try:
+        if "." in utilities:
+            if len(utilities.split(".", 1)[1]) <= 2:
+                utilities = float(utilities)
+                break
+            else:
+                utilities = input("Please enter a VALID utilities expense estimate (max 2 numbers after decimal): ")
+        elif type(int(utilities)) == int:
+            utilities = float(utilities)
+            break
+        else:
+            utilities = input("Please enter a VALID utilities expense estimate (max 2 numbers after decimal): ")
+    except ValueError:
+        utilities = input("Please enter a VALID utilities expense estimate (max 2 numbers after decimal): ")
+
+management_fees = input("Please enter estimated monthly management fees: ")
+while True:
+    try:
+        if "." in management_fees:
+            if len(management_fees.split(".", 1)[1]) <= 2:
+                management_fees = float(management_fees)
+                break
+            else:
+                management_fees = input("Please enter a VALID estimate for management fees (max 2 numbers after decimal) :")
+        elif type(int(management_fees)) == int:
+            management_fees = float(management_fees)
+            break
+        else:
+            management_fees = input("Please enter a VALID estimate for management fees (max 2 numbers after decimal) :")
+    except ValueError:
+        management_fees = input("Please enter a VALID estimate for management fees (max 2 numbers after decimal) :")
+
+hoa = input("Please enter monthly HOA fees (if not applicable, enter '0'): ")
+while True:
+    try:
+        if "." in hoa:
+            if len(hoa.split(".", 1)[1]) <= 2:
+                hoa = float(hoa)
+                break
+            else:
+                hoa = input("Please enter a VALID HOA fee (max 2 numbers after decimal) :")
+        elif type(int(hoa)) == int:
+            hoa = float(hoa)
+            break
+        else:
+            hoa = input("Please enter a VALID HOA fee (max 2 numbers after decimal) :")
+    except ValueError:
+        hoa = input("Please enter a VALID HOA fee (max 2 numbers after decimal) :")
+
+expenses = [utilities,taxes,management_fees,hoa]
+
+total_expenses = sum(expenses)
         
 load_dotenv()
 api_key = os.environ.get("MY_API_KEY") or "OOPS. Please set an environment variable named 'MY_API_KEY'."
