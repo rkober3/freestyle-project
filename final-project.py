@@ -5,6 +5,38 @@ import json
 import csv
 import os
 
+def read_contents_from_file(filename="us_cities_states_counties.csv"):
+    filepath = os.path.join(os.path.dirname(__file__), "db", filename)
+    list = []
+    with open(filepath, "r") as csv_file:
+        reader = csv.DictReader(csv_file)
+        for row in reader:
+            list.append(row)
+    return list
+list = str(read_contents_from_file())
+
+def read_properties_from_file(filename="properties.csv"):
+    filepath = os.path.join(os.path.dirname(__file__), "db", filename)
+    #print(f"READING PRODUCTS FROM FILE: '{filepath}'")
+    properties = []
+
+    with open(filepath, "r") as csv_file:
+        reader = csv.DictReader(csv_file) # assuming your CSV has headers, otherwise... csv.reader(csv_file)
+        for row in reader:
+            #print("#",row["id"],":",row["name"])
+            properties.append(row)
+    return properties
+properties = read_properties_from_file()
+
+def write_properties_to_file(filename="properties.csv", properties = properties):
+    filepath = os.path.join(os.path.dirname(__file__), "db", filename)
+
+    with open(filepath, "w") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=["street_address","city","state","purchase_price","down","interest","rent_estimate","total_expenses","monthly_net_income","first_year_cash_on_cash"])
+        writer.writeheader() # uses fieldnames set above
+        for p  in properties:
+            writer.writerow(p)
+
 #Enter address for url input.
 street_address = input("Please Enter a Street Address (No Abbreviations): ").title()
 while True:
