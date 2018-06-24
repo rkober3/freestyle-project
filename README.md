@@ -8,6 +8,6 @@ From a mac on the terminal, navigate to the directory in which this repository h
 
 The user is asked to put in the street address, city, and state of the property they wish to analyze, the purchase price, percentage down, mortgage rate, mortgage term, and a number of different expenses. All user inputs are validated prior to making a request to the API, and loops until a valid input is given, rather than terminating the program.
 
-##Program Outputs
+## Program Outputs
 
 The program prints a recommendation to buy the property or keep looking based on a first year cash on cash return (threshold set at 8%). Additionally, each time the program is run, a line is written to the 'properties.csv' file, capturing crucial information that the user may want to look back on or analyze further.
